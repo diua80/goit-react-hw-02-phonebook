@@ -1,21 +1,14 @@
-export const ContactList = ({ contacts, filter, handleFilterChange }) => {
+import { ContactItem } from 'components/ContactItem/ContactItem';
+
+
+export const ContactList = ({ contacts,HandleDeleteContact, filter, handleFilterChange }) => {
   const filteredContacts = contacts.filter(contact =>
     contact.name.toLowerCase().includes(filter.toLowerCase())
   );
   return (
-    <div>
-      <input
-  type="text"
-  placeholder="Search contacts.."
-  value={filter}
-  onChange={handleFilterChange}
-/>
+    <div>          
       <ul>
-        {filteredContacts.map(contact => (
-          <li key={contact.id}>
-            {contact.name}: {contact.number}
-          </li>
-        ))}
+        <ContactItem contacts={filteredContacts} HandleDeleteContact={HandleDeleteContact} />
       </ul>
     </div>
   );
