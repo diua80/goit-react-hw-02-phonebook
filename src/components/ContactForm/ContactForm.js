@@ -1,7 +1,5 @@
-import * as Yup from 'yup';
-import { Component } from 'react';
-// import { object, string, number, date, InferType } from 'yup';
 import { Formik, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
 import {
   StyledForm,
   StyledBtn,
@@ -9,63 +7,56 @@ import {
   StyledInput,
 } from './ContactForm.styled';
 
-const validationSchema = Yup.object().shape({
-  name: Yup.string()
-    // .matches(
-    //   /^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$/,
-    //   'Invalid name format'
-    // )
-    .required('Name is required'),
+const SignupSchema = Yup.object().shape({
+  abonent: Yup.string()
+    .min(2, 'Too Short!')
+    .max(50, 'Too Long!')
+    .required('Required'),
+  tel: Yup.string()
+    .matches(/^\+?[0-9\s]*$/, 'Invalid phone number format')
+    .required('Required'),
 });
-//  const SignupSchema = Yup.object().shape({
-//    name: Yup.string()
-//      .min(2, 'Too Short!')
-//      .max(50, 'Too Long!')
-//      .required('Required'),
-//      tel: Yup.number()
-//      .positive('Must be > 0')
-//      .min(2, 'Too Short!')
-//      .max(50, 'Too Long!')
-//      .required('Required'),
-//   search: Yup.string()
-//      .min(2, 'Too Short!')
-//      .max(50, 'Too Long!'),
-//  });
-export class ContactForm extends Component {
-  render() {
-    return (
-      <Formik
-        initialValues={{
-          name: '',
-          // tel: '',
-          // search: '',
-        }}
-        validationSchema={validationSchema}
 
-        onSubmit={(values, {resetForm}) => {
-        this.props.addContact({ ...values, id: Date.now() });
-          resetForm();
-        }}
+export const ContactForm = ({ addContact }) => {
+  return (
+    <Formik
+      initialValues={{
+        abonent: '',
+        tel: '',
+      }}
+      validationSchema={SignupSchema}
+      onSubmit={(values, { resetForm }) => {
+  addContact(values.abonent, values.tel);
+  resetForm();
+}}
     >
-      <StyledForm>
-        <StyledLable>
-          Name
-          <StyledInput name="name" placeholder="Abonent's name..." />
-        </StyledLable>
-
-        {/* <StyledLable>
-          Phone
-          <StyledInput name="tel" placeholder="Phone..." />
-        </StyledLable>
-
-        <StyledLable>
-          Search
-          <StyledInput name="search" placeholder="Name/phone..." />
-        </StyledLable> */}
-        <ErrorMessage name="name" component="div" className="error" />
-        <StyledBtn type="submit">Submit</StyledBtn>
-      </StyledForm>
+      {({ handleSubmit, handleChange, values }) => (
+        <StyledForm onSubmit={handleSubmit}>
+          <StyledLable>
+            Name
+            <StyledInput
+              type="text"
+              name="abonent"
+              placeholder="Abonent's name..."
+              onChange={handleChange}
+              value={values.abonent}
+            />            
+          </StyledLable>
+          <StyledLable>
+            Phone
+            <StyledInput
+              type="text"
+              name="tel"
+              placeholder="Abonent's number..."
+              onChange={handleChange}
+              value={values.tel}
+            />
+          </StyledLable>
+          <ErrorMessage name="tel" component="div" className="error" />
+          <ErrorMessage name="abonent" component="div" className="error" />
+          <StyledBtn type="submit">Add contact</StyledBtn>
+        </StyledForm>
+      )}
     </Formik>
   );
-  }
 };
