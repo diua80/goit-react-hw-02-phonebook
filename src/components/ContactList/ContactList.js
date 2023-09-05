@@ -1,14 +1,12 @@
 import { ContactItem } from 'components/ContactItem/ContactItem';
 
 
-export const ContactList = ({ contacts,HandleDeleteContact, filter, handleFilterChange }) => {
-  const filteredContacts = contacts.filter(contact =>
-    contact.name.toLowerCase().includes(filter.toLowerCase())
-  );
+export const ContactList = ({ contacts,handleDeleteContact}) => {
+  
   return (
     <div>          
       <ul>
-        <ContactItem contacts={filteredContacts} HandleDeleteContact={HandleDeleteContact} />
+        <ContactItem filteredContacts={contacts} handleDeleteContact={handleDeleteContact} />
       </ul>
     </div>
   );

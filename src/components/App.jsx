@@ -12,10 +12,9 @@ export class App extends Component {
       { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
       { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
     ],
-    number: '',
     filter: '',
   };
-  HandleDeleteContact = contactId => {
+  handleDeleteContact = contactId => {
     this.setState(prevState => ({
       contacts: prevState.contacts.filter(contact => contact.id !== contactId),
     }));
@@ -31,7 +30,7 @@ export class App extends Component {
       number: number,
     };
     const nameExists = this.state.contacts.some(
-      contact => contact.name === contactName
+      contact => contact.name.toLowerCase() === contactName.toLowerCase()
     );
     if (nameExists) {
       alert(`${contactName} вже присутнє у списку контактів!`);
@@ -39,11 +38,14 @@ export class App extends Component {
     }
     this.setState(prevState => ({
       contacts: [...prevState.contacts, newContact],
-      // number: ''
     }));
   };
+  
   render() {
-    const { contacts } = this.state;
+    const { contacts, filter } = this.state;
+    const filteredContacts = contacts.filter(contact =>
+    contact.name.toLowerCase().includes(filter.toLowerCase())
+  );
     return (
       <div>
         <h1>Phonebook</h1>
@@ -54,10 +56,8 @@ export class App extends Component {
           filter={this.state.filter}
         />
         <ContactList
-          contacts={contacts}
-          filter={this.state.filter}
-          handleFilterChange={this.handleFilter}
-          HandleDeleteContact={this.HandleDeleteContact}
+          contacts={filteredContacts}
+          handleDeleteContact={this.handleDeleteContact}
         />
       </div>
     );
